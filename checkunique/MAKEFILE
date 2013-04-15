@@ -1,0 +1,9 @@
+all: Main
+Main: main.o func.o
+	cc -o Main  main.o func.o
+main.o: maintest.c func.h
+	cc -c maintest.c -o main.o
+func.o: func.c func.h
+	cc -c func.c
+clean:
+	rm -f ./*.o
