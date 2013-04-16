@@ -1,22 +1,22 @@
 #include "func.h"
 
 
-/*********************** ËøµÄ½á¹¹
+/*********************** é”çš„ç»“æ„
  struct flock{
- short l_type;          // F_RDLCK:¹²Ïí¶ÁËø, F_WRLCK:¶ÀÕ¼Ğ´Ëø, F_UNLCK:½âËø
- off_t l_start;         // Æ«ÒÆÁ¿
- short l_whence;        // Ëø¿ªÊ¼Î»ÖÃ: SEEK_SET, SEEK_CUR,SEEK_END
- off_t l_len;           // ËøµÄÇøÓò³¤¶È, 0 ±íÊ¾µ½ÎÄ¼şÄ©Î²
- pid_t l_pid;           // Ê¹ÓÃF_GETLK ¿ÉÒÔ»ñÈ¡µ½¸Ã±äÁ¿
+ short l_type;          // F_RDLCK:å…±äº«è¯»é”, F_WRLCK:ç‹¬å å†™é”, F_UNLCK:è§£é”
+ off_t l_start;         // åç§»é‡
+ short l_whence;        // é”å¼€å§‹ä½ç½®: SEEK_SET, SEEK_CUR,SEEK_END
+ off_t l_len;           // é”çš„åŒºåŸŸé•¿åº¦, 0 è¡¨ç¤ºåˆ°æ–‡ä»¶æœ«å°¾
+ pid_t l_pid;           // ä½¿ç”¨F_GETLK å¯ä»¥è·å–åˆ°è¯¥å˜é‡
 };
 ************************/
 
 /**********************************************
 *funcname: checkUnique(char* pszFile,char* pszPro)
-*desc    : ¼ì²é³ÌĞòÎ¨Ò»ĞÔ
-*return  £º-1:  ³ö´í
-            0:  ²»´æÔÚ¸Ã³ÌĞò,²¢¼ÓËø³É¹¦
-           >0:  ´æÔÚ½ø³Ì 
+*desc    : æ£€æŸ¥ç¨‹åºå”¯ä¸€æ€§
+*return  ï¼š-1:  å‡ºé”™
+            0:  ä¸å­˜åœ¨è¯¥ç¨‹åº,å¹¶åŠ é”æˆåŠŸ
+           >0:  å­˜åœ¨è¿›ç¨‹ 
 ***********************************************/
 
 int checkUnique(char* pszFile, char* pszPro )
@@ -31,7 +31,7 @@ int checkUnique(char* pszFile, char* pszPro )
         return -1;
     }
     
-    char szFileName[MAX_STR_LEN];               // ÓÃÓÚËøµÄÎÄ¼şÃû
+    char szFileName[MAX_STR_LEN];               // ç”¨äºé”çš„æ–‡ä»¶å
     memset(szFileName, 0, sizeof(szFileName));
     
     if(NULL != pszFile)
@@ -41,29 +41,29 @@ int checkUnique(char* pszFile, char* pszPro )
     strcat(szFileName, pszPro);
     strcat(szFileName, ".lk");  
     
-    // ¹¹ÔìËø
+    // æ„é€ é”
     struct flock lk;                
     lk.l_type   = F_WRLCK;          
     lk.l_start  = 0;                
     lk.l_whence = SEEK_SET;         
     lk.l_len    = 0;                
   
-    int rev =   IsProcExist(szFileName);         // ¼ì²éÊÇ·ñÓĞ½ø³Ì´æÔÚ
-    if( 0 <rev )                                // ½ø³Ì´æÔÚ
+    int rev =   IsProcExist(szFileName);         // æ£€æŸ¥æ˜¯å¦æœ‰è¿›ç¨‹å­˜åœ¨
+    if( 0 <rev )                                // è¿›ç¨‹å­˜åœ¨
     {
         return rev;
     }
     
-    if( -1 == rev)                              // Ö´ĞĞ³ö´í
+    if( -1 == rev)                              // æ‰§è¡Œå‡ºé”™
     {
         return -1;
     }
     else                                        
     {
-        // ²»´æÔÚËø£¬¼´³ÌĞò²»´æÔÚ       
-        // ½ø³Ì²»´æÔÚ£¬¸øÎÄ¼şÉÏËø
+        // ä¸å­˜åœ¨é”ï¼Œå³ç¨‹åºä¸å­˜åœ¨       
+        // è¿›ç¨‹ä¸å­˜åœ¨ï¼Œç»™æ–‡ä»¶ä¸Šé”
         
-        // ´ò¿ªËøÎÄ¼ş
+        // æ‰“å¼€é”æ–‡ä»¶
         int fd = -1;
         if( -1 == (fd = open(szFileName, O_RDWR|O_CREAT, 0666)))
         {
@@ -71,10 +71,10 @@ int checkUnique(char* pszFile, char* pszPro )
             return -1;
         }
         
-        // ¸øÎÄ¼şÉÏËø
+        // ç»™æ–‡ä»¶ä¸Šé”
         if( -1 == fcntl(fd, F_SETLK, &lk))
         {
-            // ÉÏËøÊ§°Ü
+            // ä¸Šé”å¤±è´¥
             printf("set lock fialed!\n");
             close(fd);
             return -1;
@@ -88,11 +88,11 @@ int checkUnique(char* pszFile, char* pszPro )
 
 /**********************************************
 *funcname: IsProExist(char* pszPro)
-*desc    : ¼ì²é½ø³ÌÊÇ·ñ´æÔÚ
-*argu    : pszPro: ÓÃÓÚÅĞ¶Ï½ø³ÌÊÇ·ñ´æÔÚµÄÎÄ¼ş 
-*return  £º-1:  ³ö´í
-            0:  ²»´æÔÚ¸Ã³ÌĞò
-           >0:  ´æÔÚ½ø³Ì 
+*desc    : æ£€æŸ¥è¿›ç¨‹æ˜¯å¦å­˜åœ¨
+*argu    : pszPro: ç”¨äºåˆ¤æ–­è¿›ç¨‹æ˜¯å¦å­˜åœ¨çš„æ–‡ä»¶ 
+*return  ï¼š-1:  å‡ºé”™
+            0:  ä¸å­˜åœ¨è¯¥ç¨‹åº
+           >0:  å­˜åœ¨è¿›ç¨‹ 
 ***********************************************/
 
 int IsProcExist(char* pszProFile)
@@ -103,14 +103,14 @@ int IsProcExist(char* pszProFile)
         return -1;
     }
     
-    // ¹¹ÔìËø
+    // æ„é€ é”
     struct flock lk;
     lk.l_type   = F_WRLCK;          
     lk.l_start  = 0;                
     lk.l_whence = SEEK_SET;         
     lk.l_len    = 0;     
     
-    // ´ò¿ªÎÄ¼ş
+    // æ‰“å¼€æ–‡ä»¶
     int fd;
     if( -1 == (fd = open(pszProFile, O_RDWR|O_CREAT, 0666)))
     {
@@ -118,7 +118,7 @@ int IsProcExist(char* pszProFile)
         return -1;
     }
     
-    // »ñÈ¡ÎÄ¼şËø
+    // è·å–æ–‡ä»¶é”
     int rev;
     if( -1 == (rev = fcntl(fd, F_GETLK, &lk)))
     {
@@ -127,7 +127,7 @@ int IsProcExist(char* pszProFile)
         return -1;
     }
     
-    // ÎÄ¼ş´æÔÚËø£¬¼´ÓĞ½ø³Ì´æÔÚ
+    // æ–‡ä»¶å­˜åœ¨é”ï¼Œå³æœ‰è¿›ç¨‹å­˜åœ¨
     if( F_UNLCK != lk.l_type)
     {
         printf(" Exist %d programe!\n", lk.l_pid);
@@ -135,7 +135,7 @@ int IsProcExist(char* pszProFile)
         return lk.l_pid;
     }
     
-    //  ²»´æÔÚ½ø³Ì
+    //  ä¸å­˜åœ¨è¿›ç¨‹
     close(fd);
     
     return 0;  

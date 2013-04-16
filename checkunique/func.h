@@ -6,5 +6,5 @@
 
 #define MAX_STR_LEN 1024
 
-int checkUnique(char* pszFile, char* pszPro);       // ¼ì²é½ø³ÌÎ¨Ò»
-int IsProExist(char* pszPro);                       // ¼ì²é½ø³ÌÊÇ·ñÒÑ¾­´æÔÚ   
+int checkUnique(char* pszFile, char* pszPro);       // æ£€æŸ¥è¿›ç¨‹å”¯ä¸€
+int IsProExist(char* pszPro);                       // æ£€æŸ¥è¿›ç¨‹æ˜¯å¦å·²ç»å­˜åœ¨   
