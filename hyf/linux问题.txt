@@ -24,8 +24,27 @@ rmmod name
 vi /etc/sysconfig/networks/ifcfg-eth0
 service network restart
 
+ubuntu:
+serive networking restart  
+或 /etc/init.d/networking restart
+
+
 4.
 *********************************
 启动vsftp服务器
 *********************************
 service vsftp start/stop
+
+ubuntu 安装vsftp：
+sudo apt-get install vsftpd
+
+5.
+*********************************
+ssh
+*********************************
+ubuntu 安装ssh:
+服务端：  apt-get install openssh-server
+
+启动：/etc/init.d/ssh start
+查看是否启动： ps -elf|grep sshd
+更改端口： /etc/ssh/sshd_config
