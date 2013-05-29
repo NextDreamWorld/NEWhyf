@@ -48,3 +48,21 @@ ubuntu 安装ssh:
 启动：/etc/init.d/ssh start
 查看是否启动： ps -elf|grep sshd
 更改端口： /etc/ssh/sshd_config
+
+6.
+********************************
+查看端口  对于守护进程必须使用root用户执行
+********************************
+nmap localhost 
+netstat -nap|grep port   
+lsof -i:port
+
+cat /etc/services  #查看端口号对应的系统服务名称
+
+7.
+********************************
+ubuntu下如何获取命令源码
+********************************
+sudo dpkg -S `type command`
+$:net-tools :/sbin/ifconfig
+sudo apt-get source net-tools 
